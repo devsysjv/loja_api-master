@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixel & Ponto</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --header-bg: #0077cc;
+            --card-bg: #f4f4f4;
+            --link-color: #0077cc;
+            --section-bg: #f9f9f9;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #f0f0f0;
+            --header-bg: #1e1e1e;
+            --card-bg: #1e1e1e;
+            --link-color: #00bfff;
+            --section-bg: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo-azul {
+            display: block;
+        }
+
+        body.dark-mode .logo-azul {
+            display: none;
+        }
+
+        .logo-preta {
+            display: none;
+        }
+
+        body.dark-mode .logo-preta {
+            display: block;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .carrinho-header {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        .carrinho-btn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .carrinho-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .carrinho-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 45px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            min-width: 250px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 100;
+            transform-origin: top;
+            transform: scaleY(0);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .carrinho-dropdown.show {
+            display: block;
+            transform: scaleY(1);
+            opacity: 1;
+        }
+
+        .carrinho-dropdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .carrinho-dropdown li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ccc;
+            font-size: 0.95em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .carrinho-dropdown .remover-item {
+            color: #ff4444;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .carrinho-dropdown button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .carrinho-dropdown button:hover {
+            background-color: #388E3C;
+            transform: translateY(-2px);
+        }
+
+        .pagamento-opcoes {
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .pagamento-opcoes h4 {
+            margin: 0 0 8px 0;
+        }
+
+        .pagamento-opcoes label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .toggle-btn {
+            margin-top: 10px;
+            background-color: #444;
+            color: #eee;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.05);
+            background-color: var(--link-color);
+            color: #fff;
+        }
+
+        section {
+            padding: 40px 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            color: var(--link-color);
+        }
+
+        .produtos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card.shake {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+            box-shadow: 0 0 15px 5px var(--link-color);
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .card p {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .card .icone {
+            font-size: 2em;
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .icone-mouse { color: #FF5722; }
+        .icone-teclado { color: #4CAF50; }
+        .icone-fone { color: #2196F3; }
+        .icone-hub { color: #9C27B0; }
+        .icone-suporte { color: #FF9800; }
+        .icone-webcam { color: #03A9F4; }
+        .icone-monitor { color: #607D8B; }
+        .icone-cadeira { color: #795548; }
+        .icone-mousepad { color: #009688; }
+        .icone-cabo { color: #FFEB3B; }
+        .icone-ssd { color: #E91E63; }
+        .icone-ram { color: #3F51B5; }
+        .icone-gabinete { color: #FF5722; }
+        .icone-cooler { color: #00BCD4; }
+        .icone-placavideo { color: #8BC34A; }
+        .icone-processador { color: #FF4081; }
+        .icone-placamae { color: #9E9E9E; }
+        .icone-fonte { color: #FFC107; }
+        .icone-impressora { color: #3F51B5; }
+        .icone-tablet { color: #E91E63; }
+
+        .card button {
+            background-color: var(--link-color);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .card button:hover {
+            background-color: #005fa3;
+            transform: translateY(-2px);
+        }
+
+        .servicos {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .servicos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .servico-item {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .servico-item h3 {
+            color: var(--link-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contato {
+            background-color: var(--section-bg);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .contato-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .contato-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contato-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contato-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .contato-form input,
+        .contato-form textarea {
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .contato-form button {
+            background-color: var(--link-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .contato-form button:hover {
+            background-color: #005fa3;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background-color: var(--header-bg);
+            color: #ccc;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        /* Modal de Especificações */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+
+        .modal-header .icone {
+            font-size: 2.5em;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .modal-price {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+
+        .specs-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .specs-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .specs-list li:last-child {
+            border-bottom: none;
+        }
+
+        .spec-name {
+            font-weight: bold;
+            color: var(--link-color);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .modal-buttons button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn {
+            background-color: var(--link-color);
+            color: white;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #005fa3;
+        }
+
+        .close-btn {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .close-btn:hover {
+            background-color: #ddd;
+        }
+
+        body.dark-mode .close-btn {
+            background-color: #333;
+            color: #f1f1f1;
+        }
+
+        body.dark-mode .close-btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>
+                    <img src="19031cd7-d1f6-4732-b7a7-dfdca0883798.png" alt="Logo Pixel & Ponto Azul" class="logo logo-azul">
+                    <img src="9123456d-270e-4e50-a0bd-7d63a271fd86.png" alt="Logo Pixel & Ponto Preto" class="logo logo-preta">
+                    Pixel & Ponto
+                </h1>
+                <div class="carrinho-header">
+                    <button class="carrinho-btn" onclick="toggleDropdown()">
+                        🧺 Carrinho (<span id="contador-carrinho">0</span>)
+                    </button>
+                    <div class="carrinho-dropdown" id="dropdown-carrinho">
+                        <ul id="lista-carrinho"></ul>
+                        <strong>Total: R$ <span id="total-carrinho">0.00</span></strong>
+                        <div class="pagamento-opcoes">
+                            <h4>Forma de Pagamento</h4>
+                            <label>
+                                <input type="radio" name="pagamento" value="dinheiro" checked> Dinheiro
+                            </label>
+                            <label>
+                                <input type="radio" name="pagamento" value="cartao"> Cartão de Crédito
+                            </label>
+                            <label>
+                                <input type="radio" name="pagamento" value="pix"> PIX
+                            </label>
+                        </div>
+                        <button onclick="finalizarCompra()">Finalizar Compra</button>
+                    </div>
+                </div>
+            </div>
+            <button class="toggle-btn" onclick="toggleMode()">Alternar modo</button>
+        </header>
+
+        <section>
+            <h2>Bem-vindo à Pixel & Ponto</h2>
+            <p>Explore nossos produtos, serviços e entre em contato conosco para soluções digitais sob medida. Somos especialistas em tecnologia e oferecemos os melhores produtos e serviços para atender suas necessidades.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">Nossos Produtos</h2>
+            <div class="produtos">
+                <!-- Produto 1 -->
+                <div class="card" data-id="1" onclick="showSpecs(1)">
+                    <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=300&fit=crop" alt="Mouse Sem Fio">
+                    <p><span class="icone icone-mouse">🖱</span> Mouse Sem Fio Exbom MS-S22</p>
+                    <p class="price">R$ 12,81</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Mouse Sem Fio Exbom MS-S22', 12.81, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 2 -->
+                <div class="card" data-id="2" onclick="showSpecs(2)">
+                    <img src="https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=300&fit=crop" alt="Teclado Mecânico">
+                    <p><span class="icone icone-teclado">⌨</span> Teclado Mecânico Gamer Xtrike-ME</p>
+                    <p class="price">R$ 98,10</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Teclado Mecânico Gamer Xtrike-ME', 98.10, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 3 -->
+                <div class="card" data-id="3" onclick="showSpecs(3)">
+                    <img src="https://images.unsplash.com/photo-1599669454699-248893623464?w=400&h=300&fit=crop" alt="Fone Bluetooth">
+                    <p><span class="icone icone-fone">🎧</span> Fone Bluetooth TWS Gamer LEHMOX</p>
+                    <p class="price">R$ 24,62</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Fone Bluetooth TWS Gamer LEHMOX', 24.62, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 4 -->
+                <div class="card" data-id="4" onclick="showSpecs(4)">
+                    <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop" alt="Hub USB">
+                    <p><span class="icone icone-hub">🔌</span> Hub USB 3.0 4 Portas + Type-C</p>
+                    <p class="price">R$ 26,55</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Hub USB 3.0 4 Portas + Type-C', 26.55, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 5 -->
+                <div class="card" data-id="5" onclick="showSpecs(5)">
+                    <img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=400&h=300&fit=crop" alt="Suporte Notebook">
+                    <p><span class="icone icone-suporte">💻</span> Suporte Ajustável para Notebook</p>
+                    <p class="price">R$ 39,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Suporte Ajustável para Notebook', 39.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 6 -->
+                <div class="card" data-id="6" onclick="showSpecs(6)">
+                    <img src="https://images.unsplash.com/photo-1551818255-e6e109cbc5cd?w=400&h=300&fit=crop" alt="Webcam">
+                    <p><span class="icone icone-webcam">📷</span> Webcam Full HD com Microfone</p>
+                    <p class="price">R$ 59,99</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Webcam Full HD com Microfone', 59.99, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 7 -->
+                <div class="card" data-id="7" onclick="showSpecs(7)">
+                    <img src="https://images.unsplash.com/photo-1546538915-a9e2c8d6a3b8?w=400&h=300&fit=crop" alt="Monitor LED">
+                    <p><span class="icone icone-monitor">🖥</span> Monitor LED 24" Full HD</p>
+                    <p class="price">R$ 550,00</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Monitor LED 24\" Full HD', 550.00, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 8 -->
+                <div class="card" data-id="8" onclick="showSpecs(8)">
+                    <img src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=300&fit=crop" alt="Cadeira Gamer">
+                    <p><span class="icone icone-cadeira">🪑</span> Cadeira Gamer Comfort</p>
+                    <p class="price">R$ 890,00</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Cadeira Gamer Comfort', 890.00, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 9 -->
+                <div class="card" data-id="9" onclick="showSpecs(9)">
+                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&h=300&fit=crop" alt="Mousepad Gamer">
+                    <p><span class="icone icone-mousepad">🖱</span> Mousepad Gamer Grande</p>
+                    <p class="price">R$ 35,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Mousepad Gamer Grande', 35.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 10 -->
+                <div class="card" data-id="10" onclick="showSpecs(10)">
+                    <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop" alt="Cabo HDMI">
+                    <p><span class="icone icone-cabo">🔗</span> Cabo HDMI 2.0 Ultra High Speed</p>
+                    <p class="price">R$ 42,50</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Cabo HDMI 2.0 Ultra High Speed', 42.50, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 11 -->
+                <div class="card" data-id="11" onclick="showSpecs(11)">
+                    <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop" alt="SSD">
+                    <p><span class="icone icone-ssd">💾</span> SSD 480GB SATA III</p>
+                    <p class="price">R$ 289,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('SSD 480GB SATA III', 289.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 12 -->
+                <div class="card" data-id="12" onclick="showSpecs(12)">
+                    <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d8?w=400&h=300&fit=crop" alt="Memória RAM">
+                    <p><span class="icone icone-ram">🧠</span> Memória RAM 8GB DDR4</p>
+                    <p class="price">R$ 199,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Memória RAM 8GB DDR4', 199.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 13 (Novo) -->
+                <div class="card" data-id="13" onclick="showSpecs(13)">
+                    <img src="https://images.unsplash.com/photo-1562976540-1502c2145186?w=400&h=300&fit=crop" alt="Placa de Vídeo">
+                    <p><span class="icone icone-placavideo">🎮</span> Placa de Vídeo RTX 3060 12GB</p>
+                    <p class="price">R$ 1.899,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Placa de Vídeo RTX 3060 12GB', 1899.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 14 (Novo) -->
+                <div class="card" data-id="14" onclick="showSpecs(14)">
+                    <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&h=300&fit=crop" alt="Processador">
+                    <p><span class="icone icone-processador">⚡</span> Processador Intel i7-12700K</p>
+                    <p class="price">R$ 2.199,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Processador Intel i7-12700K', 2199.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 15 (Novo) -->
+                <div class="card" data-id="15" onclick="showSpecs(15)">
+                    <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&h=300&fit=crop" alt="Placa Mãe">
+                    <p><span class="icone icone-placamae">🔋</span> Placa Mãe B660M DDR4</p>
+                    <p class="price">R$ 899,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Placa Mãe B660M DDR4', 899.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 16 (Novo) -->
+                <div class="card" data-id="16" onclick="showSpecs(16)">
+                    <img src="https://images.unsplash.com/photo-1562976540-1502c2145186?w=400&h=300&fit=crop" alt="Fonte">
+                    <p><span class="icone icone-fonte">🔌</span> Fonte 750W 80 Plus Gold</p>
+                    <p class="price">R$ 549,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Fonte 750W 80 Plus Gold', 549.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 17 (Novo) -->
+                <div class="card" data-id="17" onclick="showSpecs(17)">
+                    <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=300&fit=crop" alt="Gabinete">
+                    <p><span class="icone icone-gabinete">🖥️</span> Gabinete Gamer Com 3 Fans RGB</p>
+                    <p class="price">R$ 299,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Gabinete Gamer Com 3 Fans RGB', 299.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 18 (Novo) -->
+                <div class="card" data-id="18" onclick="showSpecs(18)">
+                    <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=300&fit=crop" alt="Cooler">
+                    <p><span class="icone icone-cooler">❄️</span> Water Cooler 240mm RGB</p>
+                    <p class="price">R$ 399,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Water Cooler 240mm RGB', 399.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 19 (Novo) -->
+                <div class="card" data-id="19" onclick="showSpecs(19)">
+                    <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=300&fit=crop" alt="Impressora">
+                    <p><span class="icone icone-impressora">🖨️</span> Impressora Multifuncional</p>
+                    <p class="price">R$ 699,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Impressora Multifuncional', 699.90, this)">Adicionar ao Carrinho</button>
+                </div>
+
+                <!-- Produto 20 (Novo) -->
+                <div class="card" data-id="20" onclick="showSpecs(20)">
+                    <img src="https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&h=300&fit=crop" alt="Tablet">
+                    <p><span class="icone icone-tablet">📱</span> Tablet Android 10" 64GB</p>
+                    <p class="price">R$ 899,90</p>
+                    <button onclick="event.stopPropagation(); adicionarCarrinho('Tablet Android 10\" 64GB', 899.90, this)">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="servicos">
+            <h2 class="section-title">Nossos Serviços</h2>
+            <div class="servicos-grid">
+                <div class="servico-item">
+                    <h3>🛠️ Manutenção de Computadores</h3>
+                    <p>Serviços completos de manutenção preventiva e corretiva para seu computador, incluindo limpeza, formatação e troca de peças.</p>
+                </div>
+                <div class="servico-item">
+                    <h3>🌐 Criação de Sites</h3>
+                    <p>Desenvolvimento de sites responsivos e modernos, com designs personalizados para sua empresa ou projeto pessoal.</p>
+                </div>
+                <div class="servico-item">
+                    <h3>🔧 Montagem de PCs</h3>
+                    <p>Montagem personalizada de computadores de acordo com suas necessidades, desde máquinas para escritório até potentos gamers.</p>
+                </div>
+                <div class="servico-item">
+                    <h3>📶 Instalação de Redes</h3>
+                    <p>Instalação e configuração de redes cabeadas e wireless para residências e empresas, com equipamentos de qualidade.</p>
+                </div>
+                <div class="servico-item">
+                    <h3>💾 Recuperação de Dados</h3>
+                    <p>Serviço especializado em recuperação de dados perdidos em HDs, SSDs, pen drives e outros dispositivos de armazenamento.</p>
+                </div>
+                <div class="servico-item">
+                    <h3>🛡️ Consultoria em Segurança</h3>
+                    <p>Análise e implementação de soluções de segurança para proteger seus dados e sistemas contra ameaças digitais.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contato">
+            <h2 class="section-title">Entre em Contato</h2>
+            <div class="contato-grid">
+                <div class="contato-info">
+                    <h3>Informações de Contato</h3>
+                    <div class="contato-item">
+                        <span>📧</span>
+                        <span>contato@pixelponto.com.br</span>
+                    </div>
+                    <div class="contato-item">
+                        <span>📞</span>
+                        <span>(11) 3456-7890</span>
+                    </div>
+                    <div class="contato-item">
+                        <span>📱</span>
+                        <span>(11) 9 8765-4321 (WhatsApp)</span>
+                    </div>
+                    <div class="contato-item">
+                        <span>🏢</span>
+                        <span>Rua das Tecnologias, 123 - Centro, São Paulo - SP</span>
+                    </div>
+                    <div class="contato-item">
+                        <span>🕒</span>
+                        <span>Segunda a Sexta: 9h às 18h | Sábado: 9h às 13h</span>
+                    </div>
+                </div>
+                <div class="contato-form">
+                    <h3>Envie uma Mensagem</h3>
+                    <input type="text" placeholder="Seu nome" required>
+                    <input type="email" placeholder="Seu e-mail" required>
+                    <input type="tel" placeholder="Seu telefone">
+                    <textarea placeholder="Sua mensagem" rows="5" required></textarea>
+                    <button type="submit">Enviar Mensagem</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal de Especificações -->
+        <div id="specs-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <div class="modal-header">
+                    <span id="modal-icon" class="icone"></span>
+                    <h2 id="modal-title"></h2>
+                </div>
+                <div class="modal-price" id="modal-price"></div>
+                <p id="modal-description"></p>
+                <h3>Especificações Técnicas</h3>
+                <ul class="specs-list" id="modal-specs"></ul>
+                <div class="modal-buttons">
+                    <button class="close-btn" onclick="closeModal()">Fechar</button>
+                    <button class="add-to-cart-btn" id="modal-add-cart">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Pixel & Ponto. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        let contador = 0;
+        let total = 0;
+        const carrinho = [];
+        const dropdown = document.getElementById('dropdown-carrinho');
+        const modal = document.getElementById('specs-modal');
+
+        // Dados dos produtos com especificações técnicas
+        const produtos = {
+            1: {
+                nome: "Mouse Sem Fio Exbom MS-S22",
+                preco: 12.81,
+                icone: "🖱",
+                classe: "icone-mouse",
+                descricao: "Mouse óptico sem fio com design ergonômico para maior conforto durante o uso.",
+                especificacoes: {
+                    "Marca": "Exbom",
+                    "Modelo": "MS-S22",
+                    "Conexão": "Wireless 2.4GHz",
+                    "Sensor": "Óptico 1200DPI",
+                    "Bateria": "Pilha AA (1 unidade)",
+                    "Cor": "Preto",
+                    "Peso": "85g"
+                }
+            },
+            2: {
+                nome: "Teclado Mecânico Gamer Xtrike-ME",
+                preco: 98.10,
+                icone: "⌨",
+                classe: "icone-teclado",
+                descricao: "Teclado mecânico para gamers avec iluminação RGB e switches duráveis.",
+                especificacoes: {
+                    "Marca": "Xtrike-ME",
+                    "Tipo": "Mecânico",
+                    "Switch": "Outemu Blue",
+                    "Iluminação": "RGB personalizável",
+                    "Conexão": "USB",
+                    "Teclas": "104 teclas",
+                    "Material": "ABS"
+                }
+            },
+            3: {
+                nome: "Fone Bluetooth TWS Gamer LEHMOX",
+                preco: 24.62,
+                icone: "🎧",
+                classe: "icone-fone",
+                descricao: "Fones de ouvido True Wireless Stereo com qualidade de som surround para games.",
+                especificacoes: {
+                    "Marca": "LEHMOX",
+                    "Tipo": "Intra-auricular",
+                    "Conexão": "Bluetooth 5.0",
+                    "Autonomia": "4 horas (24h com case)",
+                    "Microfone": "Incorporado",
+                    "Cor": "Preto",
+                    "Carga": "Case com USB-C"
+                }
+            },
+            4: {
+                nome: "Hub USB 3.0 4 Portas + Type-C",
+                preco: 26.55,
+                icone: "🔌",
+                classe: "icone-hub",
+                descricao: "Expansor de portas USB com conexão rápida e compatibilidade com diversos dispositivos.",
+                especificacoes: {
+                    "Marca": "Baseus",
+                    "Portas USB": "4 portas USB 3.0",
+                    "Porta Type-C": "1 porta",
+                    "Velocidade": "5Gbps",
+                    "Compatibilidade": "Windows, Mac, Linux",
+                    "Alimentação": "5V/2A",
+                    "Cabo": "15cm"
+                }
+            },
+            5: {
+                nome: "Suporte Ajustável para Notebook",
+                preco: 39.90,
+                icone: "💻",
+                classe: "icone-suporte",
+                descricao: "Suporte ergonômico para notebook com altura ajustável e melhor ventilação.",
+                especificacoes: {
+                    "Marca": "Luzero",
+                    "Material": "Alumínio",
+                    "Ajuste de altura": "6 níveis",
+                    "Capacidade": "Até 5kg",
+                    "Cor": "Prata",
+                    "Ventilação": "Malha metálica",
+                    "Compatibilidade": "10-17 polegadas"
+                }
+            },
+            6: {
+                nome: "Webcam Full HD com Microfone",
+                preco: 59.99,
+                icone: "📷",
+                classe: "icone-webcam",
+                descricao: "Webcam de alta definição com microfone incorporado para reuniões e transmissões.",
+                especificacoes: {
+                    "Marca": "Logitech",
+                    "Resolução": "1080p Full HD",
+                    "Microfone": "Estéreo integrado",
+                    "Conexão": "USB 2.0",
+                    "Enquadramento": "Ajustável",
+                    "Foco": "Automático",
+                    "Compatibilidade": "Windows, Mac"
+                }
+            },
+            7: {
+                nome: "Monitor LED 24\" Full HD",
+                preco: 550.00,
+                icone: "🖥",
+                classe: "icone-monitor",
+                descricao: "Monitor LED de 24 polegadas com resolução Full HD e tempo de resposta rápido.",
+                especificacoes: {
+                    "Marca": "Samsung",
+                    "Tamanho": "24 polegadas",
+                    "Resolução": "1920x1080 (Full HD)",
+                    "Tipo de painel": "IPS",
+                    "Tempo de resposta": "5ms",
+                    "Conexões": "HDMI, VGA",
+                    "Taxa de atualização": "60Hz"
+                }
+            },
+            8: {
+                nome: "Cadeira Gamer Comfort",
+                preco: 890.00,
+                icone: "🪑",
+                classe: "icone-cadeira",
+                descricao: "Cadeira gamer ergonômica com ajustes de altura e apoio lombar para longas sessões.",
+                especificacoes: {
+                    "Marca": "DXRacer",
+                    "Estrutura": "Aço reforçado",
+                    "Estofamento": "Couro sintético PU",
+                    "Ajustes": "Altura, braços, inclinação",
+                    "Apoio lombar": "Ajustável",
+                    "Apoio de cabeça": "Incluso",
+                    "Rodas": "Nylon 55mm",
+                    "Capacidade": "150kg"
+                }
+            },
+            9: {
+                nome: "Mousepad Gamer Grande",
+                preco: 35.90,
+                icone: "🖱",
+                classe: "icone-mousepad",
+                descricao: "Mousepad de tecido com superfície otimizada para jogos e base de borracha antiderrapante.",
+                especificacoes: {
+                    "Marca": "Redragon",
+                    "Tamanho": "800x300mm",
+                    "Espessura": "4mm",
+                    "Superfície": "Tecido de alta precisão",
+                    "Base": "Borracha antiderrapante",
+                    "Design": "Impressão resistente a abrasão"
+                }
+            },
+            10: {
+                nome: "Cabo HDMI 2.0 Ultra High Speed",
+                preco: 42.50,
+                icone: "🔗",
+                classe: "icone-cabo",
+                descricao: "Cabo HDMI de alta velocidade compatível com resolução 4K@60Hz e HDR.",
+                especificacoes: {
+                    "Marca": "CableTech",
+                    "Comprimento": "1.8 metros",
+                    "Versão HDMI": "2.0",
+                    "Resolução": "Suporte a 4K@60Hz",
+                    "HDR": "Sim",
+                    "Conectores": "Banhados a ouro",
+                    "Proteção": "Blindagem dupla"
+                }
+            },
+            11: {
+                nome: "SSD 480GB SATA III",
+                preco: 289.90,
+                icone: "💾",
+                classe: "icone-ssd",
+                descricao: "Unidade de estado sólido com alta velocidade de leitura e gravação para melhor desempenho do sistema.",
+                especificacoes: {
+                    "Marca": "Kingston",
+                    "Capacidade": "480GB",
+                    "Interface": "SATA III 6Gb/s",
+                    "Leitura": "550MB/s",
+                    "Gravação": "500MB/s",
+                    "Formato": "2.5 polegadas",
+                    "Garantia": "3 anos"
+                }
+            },
+            12: {
+                nome: "Memória RAM 8GB DDR4",
+                preco: 199.90,
+                icone: "🧠",
+                classe: "icone-ram",
+                descricao: "Módulo de memória DDR4 para desktops com alto desempenho e baixo consumo de energia.",
+                especificacoes: {
+                    "Marca": "Corsair",
+                    "Capacidade": "8GB",
+                    "Tipo": "DDR4",
+                    "Velocidade": "2666MHz",
+                    "Tensão": "1.2V",
+                    "Latência": "CL16",
+                    "Cooler": "Dissipador de calor"
+                }
+            },
+            13: {
+                nome: "Placa de Vídeo RTX 3060 12GB",
+                preco: 1899.90,
+                icone: "🎮",
+                classe: "icone-placavideo",
+                descricao: "Placa de vídeo NVIDIA GeForce RTX 3060 com 12GB GDDR6 para jogos em alta resolução e ray tracing.",
+                especificacoes: {
+                    "Marca": "NVIDIA",
+                    "Modelo": "GeForce RTX 3060",
+                    "Memória": "12GB GDDR6",
+                    "Clock": "1777 MHz",
+                    "Interface": "PCIe 4.0",
+                    "Saídas": "HDMI 2.1, DisplayPort 1.4a",
+                    "Consumo": "170W",
+                    "Recursos": "Ray Tracing, DLSS"
+                }
+            },
+            14: {
+                nome: "Processador Intel i7-12700K",
+                preco: 2199.90,
+                icone: "⚡",
+                classe: "icone-processador",
+                descricao: "Processador Intel Core i7-12700K de 12ª geração com 12 núcleos e clock de até 5.0GHz.",
+                especificacoes: {
+                    "Marca": "Intel",
+                    "Modelo": "Core i7-12700K",
+                    "Núcleos": "12 (8P+4E)",
+                    "Threads": "20",
+                    "Clock Base": "3.6 GHz",
+                    "Clock Turbo": "5.0 GHz",
+                    "Cache": "25MB",
+                    "Soquete": "LGA 1700"
+                }
+            },
+            15: {
+                nome: "Placa Mãe B660M DDR4",
+                preco: 899.90,
+                icone: "🔋",
+                classe: "icone-placamae",
+                descricao: "Placa mãe micro ATX chipset B660 com suporte para processadores Intel de 12ª geração e DDR4.",
+                especificacoes: {
+                    "Marca": "ASUS",
+                    "Modelo": "TUF Gaming B660M-PLUS",
+                    "Chipset": "Intel B660",
+                    "Soquete": "LGA 1700",
+                    "Memória": "4x DDR4 até 5333MHz",
+                    "Slots PCIe": "1x PCIe 5.0, 2x PCIe 3.0",
+                    "Conectores": "2x M.2, 6x SATA",
+                    "Rede": "2.5G Ethernet"
+                }
+            },
+            16: {
+                nome: "Fonte 750W 80 Plus Gold",
+                preco: 549.90,
+                icone: "🔌",
+                classe: "icone-fonte",
+                descricao: "Fonte de alimentação 750W certificação 80 Plus Gold com cabos modulares e proteções avançadas.",
+                especificacoes: {
+                    "Marca": "Corsair",
+                    "Modelo": "RM750x",
+                    "Potência": "750W",
+                    "Certificação": "80 Plus Gold",
+                    "Modular": "Sim",
+                    "Ventoinha": "135mm",
+                    "Proteções": "OVP, UVP, OPP, SCP",
+                    "Conectores": "1x ATX, 2x CPU, 6x PCIe"
+                }
+            },
+            17: {
+                nome: "Gabinete Gamer Com 3 Fans RGB",
+                preco: 299.90,
+                icone: "🖥️",
+                classe: "icone-gabinete",
+                descricao: "Gabinete gamer mid tower avec 3 fans RGB, frente em mesh e suporte para water cooler.",
+                especificacoes: {
+                    "Marca": "Cooler Master",
+                    "Modelo": "TD500 Mesh",
+                    "Formato": "Mid Tower",
+                    "Material": "Aço e PVC",
+                    "Fans Inclusos": "3x 120mm ARGB",
+                    "Suporte Placa Mãe": "ATX, mATX, ITX",
+                    "Baias": "2x 3.5\", 2x 2.5\"",
+                    "VGA Máx.": "410mm"
+                }
+            },
+            18: {
+                nome: "Water Cooler 240mm RGB",
+                preco: 399.90,
+                icone: "❄️",
+                classe: "icone-cooler",
+                descricao: "Water cooler all-in-one de 240mm com bomba RGB e radiador duplo para refrigeração eficiente.",
+                especificacoes: {
+                    "Marca": "NZXT",
+                    "Modelo": "Kraken X53",
+                    "Tamanho Radiador": "240mm",
+                    "Fans": "2x 120mm",
+                    "Iluminação": "RGB",
+                    "Soquetes Suportados": "Intel LGA 1200/115x, AMD AM4",
+                    "Material Tubos": "Borracha reforçada",
+                    "Software": "CAM"
+                }
+            },
+            19: {
+                nome: "Impressora Multifuncional",
+                preco: 699.90,
+                icone: "🖨️",
+                classe: "icone-impressora",
+                descricao: "Impressora multifuncional jato de tinta com Wi-Fi, scanner e copiadora para escritório ou casa.",
+                especificacoes: {
+                    "Marca": "Epson",
+                    "Modelo": "EcoTank L3250",
+                    "Funções": "Impressão, scanner, cópia",
+                    "Tecnologia": "Jato de Tinta",
+                    "Conexão": "Wi-Fi, USB",
+                    "Tanque de Tinta": "Recarregável",
+                    "Velocidade Impressão": "10 ppm (preto)",
+                    "Resolução": "5760 x 1440 dpi"
+                }
+            },
+            20: {
+                nome: "Tablet Android 10\" 64GB",
+                preco: 899.90,
+                icone: "📱",
+                classe: "icone-tablet",
+                descricao: "Tablet Android com tela de 10 polegadas, 64GB de armazenamento e processador octa-core.",
+                especificacoes: {
+                    "Marca": "Samsung",
+                    "Modelo": "Galaxy Tab A8",
+                    "Tela": "10.5\" LCD",
+                    "Resolução": "1920 x 1200",
+                    "Processador": "Unisoc Tiger T618",
+                    "RAM": "4GB",
+                    "Armazenamento": "64GB (expansível)",
+                    "Bateria": "7040mAh",
+                    "Sistema": "Android 11"
+                }
+            }
+        };
+
+        function toggleMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function toggleDropdown() {
+            dropdown.classList.toggle('show');
+        }
+
+        function adicionarCarrinho(nome, preco, button) {
+            // Verifica se o produto já está no carrinho
+            const produtoExistente = carrinho.find(item => item.nome === nome);
+
+            if (produtoExistente) {
+                produtoExistente.quantidade++;
+                produtoExistente.total = produtoExistente.preco * produtoExistente.quantidade;
+            } else {
+                carrinho.push({
+                    nome,
+                    preco,
+                    quantidade: 1,
+                    total: preco
+                });
+            }
+
+            contador++;
+            total += preco;
+
+            atualizarCarrinho();
+
+            // Efeito visual no card do produto
+            const card = button.closest('.card');
+            card.classList.add('shake');
+            setTimeout(() => {
+                card.classList.remove('shake');
+            }, 1000);
+        }
+
+        function removerItem(index) {
+            const item = carrinho[index];
+            if (item.quantidade > 1) {
+                item.quantidade--;
+                item.total = item.preco * item.quantidade;
+                contador--;
+                total -= item.preco;
+            } else {
+                contador -= item.quantidade;
+                total -= item.total;
+                carrinho.splice(index, 1);
+            }
+
+            atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+            document.getElementById('contador-carrinho').textContent = contador;
+            document.getElementById('total-carrinho').textContent = total.toFixed(2);
+
+            const lista = document.getElementById('lista-carrinho');
+            lista.innerHTML = '';
+
+            carrinho.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    ${item.nome}
+                    <div>
+                        R$ ${item.total.toFixed(2)}
+                        (${item.quantidade}x)
+                        <span class="remover-item" onclick="removerItem(${index})">❌</span>
+                    </div>
+                `;
+                lista.appendChild(li);
+            });
+        }
+
+        function finalizarCompra() {
+            if (carrinho.length === 0) {
+                alert('O carrinho está vazio!');
+                return;
+            }
+
+            const formaPagamento = document.querySelector('input[name="pagamento"]:checked').value;
+            let mensagem = `Compra finalizada com sucesso!\n\nProdutos:\n`;
+
+            carrinho.forEach(p => {
+                mensagem += `${p.nome} - ${p.quantidade}x - R$ ${p.total.toFixed(2)}\n`;
+            });
+
+            mensagem += `\nTotal: R$ ${total.toFixed(2)}\nForma de Pagamento: `;
+
+            // Adiciona o nome completo da forma de pagamento
+            switch(formaPagamento) {
+                case 'dinheiro':
+                    mensagem += 'Dinheiro';
+                    break;
+                case 'cartao':
+                    mensagem += 'Cartão de Crédito';
+                    break;
+                case 'pix':
+                    mensagem += 'PIX';
+                    break;
+            }
+
+            alert(mensagem);
+
+            // Limpar carrinho
+            carrinho.length = 0;
+            contador = 0;
+            total = 0;
+            atualizarCarrinho();
+            dropdown.classList.remove('show');
+        }
+
+        // Funções para o modal de especificações
+        function showSpecs(productId) {
+            const produto = produtos[productId];
+
+            if (!produto) return;
+
+            // Preenche os dados do modal
+            document.getElementById('modal-icon').textContent = produto.icone;
+            document.getElementById('modal-icon').className = `icone ${produto.classe}`;
+            document.getElementById('modal-title').textContent = produto.nome;
+            document.getElementById('modal-price').textContent = `R$ ${produto.preco.toFixed(2)}`;
+            document.getElementById('modal-description').textContent = produto.descricao;
+
+            // Preenche as especificações
+            const specsList = document.getElementById('modal-specs');
+            specsList.innerHTML = '';
+
+            for (const [key, value] of Object.entries(produto.especificacoes)) {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="spec-name">${key}:</span> <span>${value}</span>`;
+                specsList.appendChild(li);
+            }
+
+            // Configura o botão de adicionar ao carrinho
+            const addButton = document.getElementById('modal-add-cart');
+            addButton.onclick = function() {
+                adicionarCarrinho(produto.nome, produto.preco, addButton);
+                closeModal();
+            };
+
+            // Exibe o modal
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Fechar o modal ao clicar fora dele
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+
+            // Fechar o dropdown do carrinho ao clicar fora dele
+            const carrinhoBtn = document.querySelector('.carrinho-btn');
+            const isClickInside = dropdown.contains(event.target) || carrinhoBtn.contains(event.target);
+
+            if (!isClickInside && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        };
+
+        // Adicionar funcionalidade ao formulário de contato
+        document.querySelector('.contato-form button').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+            document.querySelector('.contato-form').reset();
+        });
+    </script>
+</body>
+</html>
